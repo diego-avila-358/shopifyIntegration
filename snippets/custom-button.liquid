@@ -1,0 +1,163 @@
+{%- comment -%}
+  Custom Button Snippet
+  Usage: {% render 'custom-button', url: '/shop', text: 'Shop Now', style: 'primary' %}
+
+  Parameters:
+  - url: Button link URL
+  - text: Button text content
+  - style: 'primary' (filled) or 'secondary' (outlined)
+  - text_color: Custom text color (optional)
+  - background_color: Custom background color (optional)
+  - border_color: Custom border color (optional)
+  - hover_text_color: Custom hover text color (optional)
+  - hover_background_color: Custom hover background color (optional)
+  - hover_border_color: Custom hover border color (optional)
+  - size: 'small', 'medium', or 'large' (optional, defaults to medium)
+  - class: Additional CSS classes (optional)
+  - font_size: Custom font size in px (optional)
+  - font_weight: Custom font weight (optional)
+  - font_family: Custom font family (optional)
+  - text_transform: Text transformation (optional)
+  - letter_spacing: Letter spacing in px (optional)
+{%- endcomment -%}
+
+{%- liquid
+  assign button_url = url | default: '#'
+  assign button_text = text | default: 'Button'
+  assign button_style = style | default: 'primary'
+  assign button_size = size | default: 'medium'
+  assign additional_classes = class | default: ''
+
+  # Use passed parameters directly - no defaults here since they should come from the parent
+  assign default_text_color = text_color | default: '#ffffff'
+  assign default_background_color = background_color | default: '#ffffff'
+  assign default_border_color = border_color | default: '#ffffff'
+  assign default_hover_text_color = hover_text_color | default: '#000000'
+  assign default_hover_background_color = hover_background_color | default: '#000000'
+  assign default_hover_border_color = hover_border_color | default: '#000000'
+
+  assign default_font_size = font_size | default: 16
+  assign default_font_weight = font_weight | default: '600'
+  assign default_font_family = font_family
+  assign default_text_transform = text_transform
+  assign default_letter_spacing = letter_spacing | default: 0
+-%}
+
+<style>
+    .custom-button-{{ button_text | handle }} {
+      display: inline-block;
+      text-decoration: none;
+      font-weight: {{ default_font_weight }};
+      text-align: center;
+      border: 2px solid;
+      border-radius: 25px;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      min-width: 120px;
+      font-family: {% if default_font_family != blank %}{{ default_font_family }}{% else %}inherit{% endif %};
+      line-height: 1;
+      font-size: {{ default_font_size }}px;
+      {% if default_text_transform != blank %}text-transform: {{ default_text_transform }};{% endif %}
+      letter-spacing: {{ default_letter_spacing }}px;
+    }
+
+  /* Size variations */
+  .custom-button-{{ button_text | handle }}--small {
+    padding: 8px 20px;
+    min-width: 100px;
+    border-radius: 20px;
+  }
+
+  .custom-button-{{ button_text | handle }}--medium {
+    padding: 12px 30px;
+    min-width: 120px;
+    border-radius: 25px;
+  }
+
+  .custom-button-{{ button_text | handle }}--large {
+    padding: 16px 40px;
+    min-width: 140px;
+    border-radius: 30px;
+  }
+
+    /* Style variations */
+    .custom-button-{{ button_text | handle }}--primary {
+      color: {{ default_text_color }};
+      background: {{ default_background_color }};
+      border-color: {{ default_border_color }};
+    }
+
+    .custom-button-{{ button_text | handle }}--primary:hover {
+      background: {{ default_hover_background_color }};
+      color: {{ default_hover_text_color }};
+      border-color: {{ default_hover_border_color }};
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+      text-decoration: none;
+    }
+
+    .custom-button-{{ button_text | handle }}--secondary {
+      color: {{ default_text_color }};
+      background: transparent;
+      border-color: {{ default_border_color }};
+    }
+
+    .custom-button-{{ button_text | handle }}--secondary:hover {
+      background: {{ default_hover_background_color }};
+      color: {{ default_hover_text_color }};
+      border-color: {{ default_hover_border_color }};
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+      text-decoration: none;
+    }
+
+    /* Focus states for accessibility */
+    .custom-button-{{ button_text | handle }}:focus {
+      outline: 2px solid rgba(255, 255, 255, 0.5);
+      outline-offset: 2px;
+    }
+
+    /* Disabled state */
+    .custom-button-{{ button_text | handle }}:disabled,
+    .custom-button-{{ button_text | handle }}.disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none !important;
+      box-shadow: none !important;
+    }
+
+    .custom-button-{{ button_text | handle }}:disabled:hover,
+    .custom-button-{{ button_text | handle }}.disabled:hover {
+      background: {{ default_background_color }} !important;
+      color: {{ default_text_color }} !important;
+      text-decoration: none;
+    }
+
+    /* Remove default link styling */
+    .custom-button-{{ button_text | handle }}:link,
+    .custom-button-{{ button_text | handle }}:visited {
+      color: inherit;
+      text-decoration: none;
+    }
+</style>
+
+{%- if button_url != blank and button_url != '#' -%}
+  <a
+    href="{{ button_url }}"
+    class="custom-button-{{ button_text | handle }} custom-button-{{ button_text | handle }}--{{ button_style }} custom-button-{{ button_text | handle }}--{{ button_size }} {{ additional_classes }}"
+    {% if button_url contains 'http' and button_url contains '://' %}
+      target="_blank" rel="noopener noreferrer"
+    {% endif %}
+  >
+    {{ button_text }}
+  </a>
+{%- else -%}
+  <a
+    href="#"
+    class="custom-button-{{ button_text | handle }} custom-button-{{ button_text | handle }}--{{ button_style }} custom-button-{{ button_text | handle }}--{{ button_size }} {{ additional_classes }}"
+    onclick="return false;"
+    style="cursor: default;"
+  >
+    {{ button_text }}
+  </a>
+{%- endif -%}

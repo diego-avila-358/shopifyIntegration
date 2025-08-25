@@ -1,0 +1,67 @@
+{% comment %}
+  Enhanced product media modal:
+  - Shows PDF from metafield if available
+  - Falls back to default image modal otherwise
+{% endcomment %}
+
+<product-modal id="ProductModal-{{ section.id }}" class="product-media-modal media-modal">
+  <div
+    class="product-media-modal__dialog color-{{ section.settings.color_scheme }} gradient"
+    role="dialog"
+    aria-label="{{ 'products.modal.label' | t }}"
+    aria-modal="true"
+    tabindex="-1"
+  >
+    <!-- Close Button -->
+    <button
+      id="ModalClose-{{ section.id }}"
+      type="button"
+      class="product-media-modal__toggle"
+      aria-label="{{ 'accessibility.close' | t }}"
+    >
+      {{ 'icon-close.svg' | inline_asset_content }}
+    </button>
+
+    <!-- Modal Content -->
+    <div
+      class="product-media-modal__content color-{{ section.settings.color_scheme }} gradient"
+      role="document"
+      aria-label="{{ 'products.modal.label' | t }}"
+      tabindex="0"
+    >
+      {% if product.metafields.custom.pdf_file %}
+        <iframe
+          src="{{ product.metafields.custom.pdf_file | file_url }}"
+          style="width: 100%; height: 100vh; border: none;"
+        ></iframe>
+      {% else %}
+        {% if product.selected_or_first_available_variant.featured_media != null %}
+          {% assign media = product.selected_or_first_available_variant.featured_media %}
+          {% render 'product-media',
+            media: media,
+            loop: section.settings.enable_video_looping,
+            variant_image: section.settings.hide_variants
+          %}
+        {% endif %}
+
+        {% for media in product.media %}
+          {% assign variant_image = false %}
+          {% if section.settings.hide_variants
+            and variant_images contains media.src
+            or variant_images contains media.id
+          %}
+            {% assign variant_image = true %}
+          {% endif %}
+
+          {% unless media.id == product.selected_or_first_available_variant.featured_media.id %}
+            {% render 'product-media',
+              media: media,
+              loop: section.settings.enable_video_looping,
+              variant_image: variant_image
+            %}
+          {% endunless %}
+        {% endfor %}
+      {% endif %}
+    </div>
+  </div>
+</product-modal>

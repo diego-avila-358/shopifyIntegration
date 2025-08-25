@@ -1,0 +1,308 @@
+{{ 'header-wix.css' | asset_url | stylesheet_tag }}
+
+<header id="site-header" class="site-header" tabindex="-1">
+  <div class="header-bg-layers">
+    <div class="color-underlay"></div>
+    <div class="bg-media"></div>
+  </div>
+  
+  <div class="header-content">
+    <div class="header-inline-content">
+      <div class="header-container">
+        
+        <!-- Top Header Section -->
+        <section class="top-header-section">
+          <div class="header-columns">
+            
+            <!-- Logo Column -->
+            <div class="logo-column">
+              <div class="logo-wrapper">
+                {%- if section.settings.logo != blank -%}
+                  <a href="{{ routes.root_url }}" class="logo-link">
+                    {{
+                      section.settings.logo
+                      | image_url: width: 204
+                      | image_tag:
+                        class: 'header-logo',
+                        alt: section.settings.logo.alt | default: shop.name,
+                        width: section.settings.logo_width,
+                        height: section.settings.logo_height,
+                        loading: 'eager'
+                    }}
+                  </a>
+                {%- else -%}
+                  <a href="{{ routes.root_url }}" class="logo-link">
+                    <span class="shop-name">{{ shop.name }}</span>
+                  </a>
+                {%- endif -%}
+              </div>
+            </div>
+            
+            <!-- Search Column -->
+            <div class="search-column">
+              <div class="search-container">
+                <div class="search-wrapper">
+                  <form class="search-form" role="search" action="{{ routes.search_url }}">
+                    <div class="search-input-wrapper">
+                      <div class="search-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="5 5 14 14" aria-hidden="true">
+                          <path fill="currentColor" d="m15.683 14.6 3.265 3.265a.2.2 0 0 1 0 .282l-.8.801a.2.2 0 0 1-.283 0l-3.266-3.265a5.961 5.961 0 1 1 1.084-1.084zm-4.727 1.233a4.877 4.877 0 1 0 0-9.754 4.877 4.877 0 0 0 0 9.754z"></path>
+                        </svg>
+                      </div>
+                      <div class="search-input-container">
+                        <input 
+                          name="q" 
+                          class="search-input" 
+                          type="search" 
+                          placeholder="{{ section.settings.search_placeholder | default: 'Search...' }}" 
+                          aria-label="Search..." 
+                          maxlength="100" 
+                          autocomplete="off"
+                          value="{{ search.terms | escape }}"
+                        >
+                      </div>
+                      <button class="search-submit" type="submit" aria-label="Search...">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="5 5 14 14" aria-hidden="true">
+                          <path fill="currentColor" d="m15.683 14.6 3.265 3.265a.2.2 0 0 1 0 .282l-.8.801a.2.2 0 0 1-.283 0l-3.266-3.265a5.961 5.961 0 1 1 1.084-1.084zm-4.727 1.233a4.877 4.877 0 1 0 0-9.754 4.877 4.877 0 0 0 0 9.754z"></path>
+                        </svg>
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Contact Info Column -->
+            <div class="contact-column">
+              <div class="contact-container">
+                
+                {%- if section.settings.phone_number != blank -%}
+                <div class="phone-number">
+                  <h3>{{ section.settings.phone_number }}</h3>
+                </div>
+                {%- endif -%}
+                
+                {%- if section.settings.us_flag_image != blank -%}
+                <div class="flag-image us-flag">
+                  {{
+                    section.settings.us_flag_image
+                    | image_url: width: 34
+                    | image_tag:
+                      class: 'flag-icon',
+                      alt: 'United States',
+                      width: 17,
+                      height: 17
+                  }}
+                </div>
+                {%- endif -%}
+                
+                {%- if section.settings.language_text != blank -%}
+                <div class="language-text">
+                  <h6>{{ section.settings.language_text }}</h6>
+                </div>
+                {%- endif -%}
+                
+                {%- if section.settings.mexico_flag_image != blank -%}
+                <div class="flag-image mexico-flag">
+                  {{
+                    section.settings.mexico_flag_image
+                    | image_url: width: 34
+                    | image_tag:
+                      class: 'flag-icon',
+                      alt: 'Mexico',
+                      width: 17,
+                      height: 17
+                  }}
+                </div>
+                {%- endif -%}
+                
+                {%- if section.settings.contact_button_text != blank and section.settings.contact_button_url != blank -%}
+                <div class="contact-button-wrapper">
+                  <a href="{{ section.settings.contact_button_url }}" class="contact-button">
+                    <span class="button-label">{{ section.settings.contact_button_text }}</span>
+                  </a>
+                </div>
+                {%- endif -%}
+                
+              </div>
+            </div>
+            
+          </div>
+        </section>
+        
+        <!-- Navigation Menu Section -->
+        <section class="nav-menu-section">
+          <div class="nav-columns">
+            <div class="nav-column">
+              <div class="nav-container">
+                {%- if section.settings.menu != blank -%}
+                  <nav class="horizontal-menu" aria-label="Site">
+                    <ul class="menu-list">
+                      {%- for link in section.settings.menu.links -%}
+                        <li class="menu-item{% if link.current %} current-page{% endif %}{% if link.links != blank %} has-dropdown{% endif %}">
+                          <div class="menu-item-container">
+                            {%- if link.links != blank -%}
+                              <div class="menu-link dropdown-toggle" tabindex="0" aria-haspopup="true" aria-expanded="false" role="button">
+                                <div class="menu-link-container">
+                                  <span class="menu-label">{{ link.title | upcase }}</span>
+                                </div>
+                              </div>
+                              <div class="dropdown-icon-wrapper">
+                                <button tabindex="0" class="dropdown-icon" aria-label="Toggle {{ link.title }}">
+                                  <svg width="16" height="11" viewBox="0 0 16 11" fill="black" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M8 10.5L16 1.86193L14.7387 0.5L8 7.77613L1.26133 0.499999L-5.95321e-08 1.86193L8 10.5Z"></path>
+                                  </svg>
+                                </button>
+                              </div>
+                              <div class="dropdown-menu" role="group" aria-label="{{ link.title }}">
+                                <div class="dropdown-animation-box">
+                                  <div class="dropdown-page-wrapper">
+                                    <ul class="dropdown-list">
+                                      {%- for child_link in link.links -%}
+                                        <li class="dropdown-item">
+                                          <div class="dropdown-item-container">
+                                            <a href="{{ child_link.url }}" class="dropdown-link">
+                                              <div class="dropdown-link-container">
+                                                <span class="dropdown-label">{{ child_link.title }}</span>
+                                              </div>
+                                            </a>
+                                          </div>
+                                        </li>
+                                      {%- endfor -%}
+                                    </ul>
+                                  </div>
+                                </div>
+                              </div>
+                            {%- else -%}
+                              <a href="{{ link.url }}" class="menu-link{% if link.current %} current-page{% endif %}">
+                                <div class="menu-link-container">
+                                  <span class="menu-label">{{ link.title | upcase }}</span>
+                                </div>
+                              </a>
+                            {%- endif -%}
+                          </div>
+                        </li>
+                      {%- endfor -%}
+                    </ul>
+                  </nav>
+                {%- endif -%}
+              </div>
+            </div>
+          </div>
+        </section>
+        
+      </div>
+    </div>
+  </div>
+</header>
+
+{% schema %}
+{
+  "name": "Header Test",
+  "class": "section-header-test",
+
+  "presets": [
+    {
+      "name": "Header Test"
+    }
+  ],
+  "settings": [
+    {
+      "type": "header",
+      "content": "Logo"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo image"
+    },
+    {
+      "type": "range",
+      "id": "logo_width",
+      "min": 50,
+      "max": 300,
+      "step": 10,
+      "default": 100,
+      "unit": "px",
+      "label": "Logo width"
+    },
+    {
+      "type": "range",
+      "id": "logo_height",
+      "min": 20,
+      "max": 150,
+      "step": 5,
+      "default": 45,
+      "unit": "px",
+      "label": "Logo height"
+    },
+    {
+      "type": "header",
+      "content": "Search"
+    },
+    {
+      "type": "text",
+      "id": "search_placeholder",
+      "default": "Search...",
+      "label": "Search placeholder text"
+    },
+    {
+      "type": "header",
+      "content": "Contact Information"
+    },
+    {
+      "type": "text",
+      "id": "phone_number",
+      "default": "+1 956 205 1345",
+      "label": "Phone number"
+    },
+    {
+      "type": "image_picker",
+      "id": "us_flag_image",
+      "label": "US flag image"
+    },
+    {
+      "type": "text",
+      "id": "language_text",
+      "default": "ENG      ESP",
+      "label": "Language text"
+    },
+    {
+      "type": "image_picker",
+      "id": "mexico_flag_image",
+      "label": "Mexico flag image"
+    },
+    {
+      "type": "text",
+      "id": "contact_button_text",
+      "default": "Contact Us",
+      "label": "Contact button text"
+    },
+    {
+      "type": "url",
+      "id": "contact_button_url",
+      "label": "Contact button URL"
+    },
+    {
+      "type": "header",
+      "content": "Navigation"
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "default": "main-menu",
+      "label": "Menu"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    }
+  ]
+}
+{% endschema %}
